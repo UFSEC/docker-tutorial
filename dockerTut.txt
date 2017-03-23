@@ -1,0 +1,43 @@
+##get the docker community php-oci container
+$ docker pull davidgaya/apache-php-oci
+#run base image and look through it. also show the webpage at ip port 80
+$ docker run -d -p 80:80 --name sec davidgaya/apache-php-oci
+$ docker-machine ip
+$ docker exec -it sec bash
+#show you can change the port mapping
+$ docker run -d -p 3000:80 --name sec davidgaya/apache-php-oci
+
+##create Dockerfile
+$ vim Dockerfile
+#paste this in, save and quit
+FROM davidgaya/apache-php-oci:latest
+RUN rm -fr /app
+#build docker image and run it with a volume
+$ docker build -t alewitt/sec .
+$ docker run -d -p 80:80 -v //c/Users/alewi/Desktop/Docker/webpage:/app --name sec alewitt/sec
+
+##make our image from Dockerfile with all our source code
+FROM davidgaya/apache-php-oci:latest
+RUN rm -fr /app
+COPY . /app
+#build and run
+$ docker build -t alewitt/sec_complete .
+$ docker run -d -p 80:80 --name sec alewitt/sec_complete
+
+##to move this to another computer
+$ docker save -o <save image to path> <image name>
+#then move the tar file to desired location
+$ docker load -i <path to image tar file>
+
+
+##other helpful commands
+#see all containers
+$ docker ps -a
+#see all images
+$ docker images
+#stop container
+docker stop sec
+#remove old container
+docker rm sec
+#remove image
+docker rmi alewitt/sec
